@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     return new NextResponse(null, {
       status: 204,
       headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '86400'
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'URL is required' }, {
         status: 400,
         headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3000'
+          'Access-Control-Allow-Origin': '*'
         }
       });
     }
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
           imageUrl: existingRows[0].image_url
         }, {
           headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:3000'
+            'Access-Control-Allow-Origin': '*'
           }
         });
       }
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       imageUrl
     }, {
       headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        'Access-Control-Allow-Origin': '*'
       }
     });
   } catch (error) {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       {
         status: 500,
         headers: {
-          'Access-Control-Allow-Origin': 'http://localhost:3000'
+          'Access-Control-Allow-Origin': '*'
         }
       }
     );
@@ -92,21 +92,39 @@ export async function GET(request: Request) {
       ) as [any[], any];
 
       if (!rows.length) {
-        return NextResponse.json({ error: 'Screenshot not found' }, { status: 404 });
+        return NextResponse.json({ error: 'Screenshot not found' }, {
+          status: 404,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
       }
 
       return NextResponse.json({
         imageUrl: rows[0].image_url
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
       });
     }
 
     const [rows] = await pool.execute('SELECT id, url, image_url FROM screenshots') as [any[], any];
-    return NextResponse.json(rows);
+    return NextResponse.json(rows, {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   } catch (error) {
     console.error('Error fetching screenshots:', error);
     return NextResponse.json(
       { error: 'Failed to fetch screenshots' },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      }
     );
   }
 }
