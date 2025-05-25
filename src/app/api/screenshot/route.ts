@@ -5,13 +5,30 @@ import pool from '@/utils/db';
 import { randomUUID } from 'crypto';
 
 export async function POST(request: Request) {
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400'
+      }
+    });
+  }
+
   try {
     const { url, id } = await request.json();
     console.log('URL:', url);
     console.log('ID:', id);
 
     if (!url) {
-      return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+      return NextResponse.json({ error: 'URL is required' }, {
+        status: 400,
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000'
+        }
+      });
     }
 
     if (id) {
@@ -25,6 +42,10 @@ export async function POST(request: Request) {
           message: 'Screenshot found',
           id,
           imageUrl: existingRows[0].image_url
+        }, {
+          headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:3000'
+          }
         });
       }
     }
@@ -40,12 +61,21 @@ export async function POST(request: Request) {
       message: 'Screenshot saved successfully',
       id: newId,
       imageUrl
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000'
+      }
     });
   } catch (error) {
-    console.error('Screenshot error:', error);
+    console.error('Error processing screenshot:', error);
     return NextResponse.json(
-      { error: 'Failed to take or save screenshot' },
-      { status: 500 }
+      { error: 'Failed to process screenshot' },
+      {
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000'
+        }
+      }
     );
   }
 }
