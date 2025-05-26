@@ -29,11 +29,11 @@ export async function POST(request: Request) {
           'Access-Control-Allow-Origin': '*'
         }
       });
-    }
+    }   
 
 
 
-    
+
     if (id) {
       const [existingRows] = await pool.execute(
         'SELECT image_url FROM screenshots WHERE id = ?',
