@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   try {
     const { url, id } = await request.json();
     console.log('URL:', url);
-    console.log('ID:', id);
+    console.log('ID:', id);  
 
     if (!url) {
       return NextResponse.json({ error: 'URL is required' }, {
