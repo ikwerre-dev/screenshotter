@@ -31,6 +31,9 @@ export async function POST(request: Request) {
       });
     }
 
+
+
+    
     if (id) {
       const [existingRows] = await pool.execute(
         'SELECT image_url FROM screenshots WHERE id = ?',
